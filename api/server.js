@@ -14,6 +14,7 @@ server.post('/api/users', (req, res) => {
    
    if(!name || !bio){ 
        res.status(400).json({ message: "Please provide name and bio for the user" });
+       return;
    }
    userDB.insert({name, bio})
        .then(user => {
@@ -40,9 +41,9 @@ server.get('/api/users/:id', (req, res) => {
         userDB.findById(id)
         .then(user => {
             if(!user) {
-                res.status(200).json({ message: "The user with the specified ID does not exist" })
+                res.status(404).json({ message: "The user with the specified ID does not exist" })
             }else{
-                res.status(404).json(user)
+                res.status(200).json(user)
             }
         })
         .catch(err => {
@@ -57,7 +58,7 @@ server.delete('/api/users/:id', (req, res) => {
         if(!user) {
             res.status(404).json({ message: "The user with the specified ID does not exist" })
         }else{
-           res.status(200).json({message: `Successfully deleted user id ${id}`}) 
+           res.status(200).json(user) 
         }
     })
     .catch(err => {
@@ -71,6 +72,7 @@ server.put('/api/users/:id', (req,res) => {
 
     if(!name || !bio){
         res.status(400).json({ message: "Please provide name and bio for the user" })
+        return;
     }
     userDB.update(id, {name, bio})
     .then(user => {
